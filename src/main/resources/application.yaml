@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: aula21_with_spring_junit
