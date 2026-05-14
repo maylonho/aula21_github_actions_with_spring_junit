@@ -1,0 +1,31 @@
+name: Continuous Integration with Github Actions
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+#Faz a cópia do código para dentro da maquina ubuntu
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+#Instala e configura o java dentro da maquina ubuntu
+      - name: Configurar JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+#Compila o codigo e gera o artefato .jar
+      - name: Build Application JAR
+        run: mvn clean package
+
+#Executa os testes junit
+      - name: Run test
+        run: mvn test
