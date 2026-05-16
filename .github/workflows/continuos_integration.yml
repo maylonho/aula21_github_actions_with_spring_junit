@@ -29,3 +29,27 @@ jobs:
 #Executa os testes junit
       - name: Run test
         run: mvn test
+
+#Login no docker hub
+      - name: Login in Dockerhub
+        uses: actions/login-action@v3
+        with:
+          username: ${{ secrects.DOCKER_USERNAME }}
+          password: ${{ secrects.DOCKER_PASSWORD }}
+
+#Construção da Docker Image
+      - name: Build da docker Image
+        run: docker build -t ${{ secrects.DOCKER_USERNAME }}/aula21_with_spring_junit:latest .
+
+#Alterar a tag da docker image
+      - name: Tag docker image
+        run: |
+          docker tag ${{ secrects.DOCKER_USERNAME }}/aula21_with_spring_junit:latest \
+          ${{ secrects.DOCKER_USERNAME }}/aula21_with_spring_junit:${{ github.run_id }}
+
+#Publicar a docker image no DockerHub
+      - name: Publish in DockerHub
+        run: |
+          docker push ${{ secrects.DOCKER_USERNAME }}/aula21_with_spring_junit:latest
+
+          docker push ${{ secrects.DOCKER_USERNAME }}/aula21_with_spring_junit:${{ github.run_id }}
